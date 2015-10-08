@@ -413,14 +413,19 @@ if($cfg->showAnsweredTickets()) {
     }
 }
 
-if($stats['assigned']) {
+    
+    $nav->addSubMenu(array('desc'=>__('My Unanswered Tickets').' ('.number_format($stats['unanswered_assigned']).')',
+                           'title'=>__('UnAnswered Assigned Tickets'),
+                           'href'=>'tickets.php?status=unanswered_assigned',
+                           'iconclass'=>'assignedTickets'),
+                        ($_REQUEST['status']=='unanswered_assigned'));
 
     $nav->addSubMenu(array('desc'=>__('My Tickets').' ('.number_format($stats['assigned']).')',
                            'title'=>__('Assigned Tickets'),
                            'href'=>'tickets.php?status=assigned',
                            'iconclass'=>'assignedTickets'),
                         ($_REQUEST['status']=='assigned'));
-}
+
 
 if($stats['overdue']) {
     $nav->addSubMenu(array('desc'=>__('Overdue').' ('.number_format($stats['overdue']).')',
@@ -458,7 +463,7 @@ if($thisstaff->canCreateTickets()) {
 }
 
 
-$ost->addExtraHeader('<script type="text/javascript" src="js/ticket.js"></script>');
+$ost->addExtraHeader('<script type="text/javascript" src="js/ticket.js?19292ad"></script>');
 $ost->addExtraHeader('<meta name="tip-namespace" content="tickets.queue" />',
     "$('#content').data('tipNamespace', 'tickets.queue');");
 

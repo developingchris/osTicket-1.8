@@ -44,6 +44,13 @@ switch(strtolower($_REQUEST['status'])){ //Status is overloaded
         $status='open';
         $staffId=$thisstaff->getId();
         $results_type=__('My Tickets');
+        $showanswered=true;
+        break;
+    case 'unanswered_assigned':
+        $status='open';
+        $staffId=$thisstaff->getId();
+        $results_type=__('My Unanswered Tickets');
+        $showanswered=false;
         break;
     case 'answered':
         $status='open';
@@ -101,6 +108,11 @@ if($staffId && ($staffId==$thisstaff->getId())) { //My tickets
     $results_type=__('Assigned Tickets');
     $qwhere.=' AND ticket.staff_id='.db_input($staffId);
     $showassigned=false; //My tickets...already assigned to the staff.
+
+    if(!$showanswered){
+      $qwhere.=' AND ticket.isanswered=0 ';
+    }
+
 }elseif($showoverdue) { //overdue
     $qwhere.=' AND ticket.isoverdue=1 ';
 }elseif($showanswered) { ////Answered
@@ -269,7 +281,6 @@ $qfrom.=' LEFT JOIN '.TICKET_LOCK_TABLE.' tlock ON (ticket.ticket_id=tlock.ticke
 TicketForm::ensureDynamicDataView();
 
 $query="$qselect $qfrom $qwhere ORDER BY $order_by $order LIMIT ".$pageNav->getStart().",".$pageNav->getLimit();
-//echo $query;
 $hash = md5($query);
 $_SESSION['search_'.$hash] = $query;
 $res = db_query($query);

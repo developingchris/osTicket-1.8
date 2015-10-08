@@ -2366,6 +2366,24 @@ class Ticket {
                 .'WHERE ticket.isanswered = 1 '
                 . $where
 
+                .'UNION SELECT \'answered_assigned\', count( ticket.ticket_id ) AS tickets '
+                .'FROM ' . TICKET_TABLE . ' ticket '
+                .'INNER JOIN '.TICKET_STATUS_TABLE. ' status
+                    ON (ticket.status_id=status.id
+                            AND status.state=\'open\') '
+                .'WHERE ticket.isanswered = 1 '
+                .'and ticket.staff_id = ' . db_input($staff->getId()) . ' '
+                . $where
+
+                .'UNION SELECT \'unanswered_assigned\', count( ticket.ticket_id ) AS tickets '
+                .'FROM ' . TICKET_TABLE . ' ticket '
+                .'INNER JOIN '.TICKET_STATUS_TABLE. ' status
+                    ON (ticket.status_id=status.id
+                            AND status.state=\'open\') '
+                .'WHERE ticket.isanswered = 0 '
+                .'and ticket.staff_id = ' . db_input($staff->getId()) . ' '
+                . $where
+
                 .'UNION SELECT \'overdue\', count( ticket.ticket_id ) AS tickets '
                 .'FROM ' . TICKET_TABLE . ' ticket '
                 .'INNER JOIN '.TICKET_STATUS_TABLE. ' status
