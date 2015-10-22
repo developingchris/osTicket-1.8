@@ -251,9 +251,14 @@ class Dept {
 
     function isManager($staff) {
 
+      if($this->managerOnly()){
         if(is_object($staff)) $staff=$staff->getId();
 
         return ($this->getManagerId() && $this->getManagerId()==$staff);
+      }
+      else{
+        return true;
+      }
     }
 
     function isMember($staff) {
@@ -285,6 +290,10 @@ class Dept {
 
     function assignMembersOnly() {
         return ($this->config->get('assign_members_only', 0));
+    }
+
+    function managerOnly() {
+        return ($this->config->get('mark_answered_manager_only', 0));
     }
 
     function isGroupMembershipEnabled() {
